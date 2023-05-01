@@ -26,15 +26,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Get Branch Name
-        shell: bash
-        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
-        id: extract_branch
-
-      - name: Print Branch Name
-        shell: bash
-        run: echo "${{ steps.extract_branch.outputs.branch }}"
-
       - name: Set up Node
         uses: actions/setup-node@v3
 
@@ -51,5 +42,5 @@ jobs:
           BRANCH: builds # The branch name where you want to push the assets
           FOLDER: dist # The directory where your assets are generated
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub will automatically add this - you don't need to bother getting a token
-          MESSAGE: "Push: ({sha}) {msg} ${{ steps.extract_branch.outputs.branch }}" # The commit message
-          TARGET_DIR: ${{ steps.extract_branch.outputs.branch }}
+          MESSAGE: "Push: ({sha}) {msg}" # The commit message
+
