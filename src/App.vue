@@ -43,7 +43,7 @@ const id = setInterval(()=>{
             if (autoRedirectActive.value) {
                 window.location.assign(`https://ultraflame4.github.io/${latestRelease.value}`)
             }
-        },800)
+        },1200)
     }
 },1000)
 document.addEventListener('keypress',ev => {
