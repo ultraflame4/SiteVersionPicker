@@ -18,7 +18,7 @@
     <h2>View Specific Version</h2>
 
     <ul id="version-list">
-        <li v-for="(item,index) in SiteVersions">
+        <li v-for="item in SiteVersions">
             <a :href="`https://ultraflame4.github.io/${item.name}`">
                 &xrArr;{{ item.name }}&xlArr;
             </a>
