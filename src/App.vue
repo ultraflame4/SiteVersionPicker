@@ -4,7 +4,9 @@
     <hr/>
     <template v-if="autoRedirectActive">
         <h2>Auto Redirect to <span style="color:aquamarine">{{latestRelease}}</span> in <span style="background: var(--bg-2);padding: 0 0.25em;border-radius: 0.4em">{{ counter }} second</span>!</h2>
-        <h1 style="margin-bottom: 0">[<span style="color:indianred">Shift + C</span>]</h1>
+        <h1 style="margin-bottom: 0"  @click="autoRedirectActive=false">[<span style="color:cadetblue;cursor: pointer">Click Me!</span>]</h1>
+        <h2 style="margin: 0">or</h2>
+        <h1 style="margin: 0">[<span style="color:indianred">Shift + C</span>]</h1>
         <h2 style="margin-top: 0"> to Cancel!</h2>
 
     </template>
@@ -41,7 +43,7 @@ const id = setInterval(()=>{
             if (autoRedirectActive.value) {
                 window.location.assign(`https://ultraflame4.github.io/${latestRelease.value}`)
             }
-        },500)
+        },800)
     }
 },1000)
 document.addEventListener('keypress',ev => {
@@ -63,7 +65,7 @@ document.addEventListener('keypress',ev => {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
+    gap: 0.3em;
     & > li {
 
         &:hover {
@@ -81,7 +83,10 @@ document.addEventListener('keypress',ev => {
         }
 
         & > a {
-            display: inline-block;
+            display: flex;
+            height: 2.25rem;
+            align-items: center;
+
             font-weight: 800;
             font-size: 1.3em;
             text-decoration: none;
