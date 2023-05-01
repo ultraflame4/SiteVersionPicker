@@ -3,7 +3,7 @@
     <h1>Site Version Picker</h1>
     <hr/>
     <template v-if="autoRedirectActive">
-        <h2>Auto Redirect in <span style="background: var(--bg-2);padding: 0 0.25em;border-radius: 0.4em">{{ counter }} second</span>!</h2>
+        <h2>Auto Redirect to <span style="color:aquamarine">{{latestRelease}}</span> in <span style="background: var(--bg-2);padding: 0 0.25em;border-radius: 0.4em">{{ counter }} second</span>!</h2>
         <h1 style="margin-bottom: 0">[<span style="color:indianred">Shift + C</span>]</h1>
         <h2 style="margin-top: 0"> to Cancel!</h2>
 
@@ -26,13 +26,11 @@
 
 </template>
 <script setup lang="ts">
-import {SiteVersions} from "./tools.ts";
+import {latestRelease, SiteVersions} from "./tools.ts";
 import {ref} from "vue";
 
 const autoRedirectActive = ref(true)
 const counter = ref(2)
-const autourl = ""
-
 
 
 const id = setInterval(()=>{
@@ -40,8 +38,10 @@ const id = setInterval(()=>{
     if (counter.value < 1){
         clearInterval(id)
         setTimeout(()=>{
-            window.location.assign(autourl)
-        },1000)
+            if (autoRedirectActive.value) {
+                window.location.assign(`https://ultraflame4.github.io/${latestRelease.value}`)
+            }
+        },500)
     }
 },1000)
 document.addEventListener('keypress',ev => {
