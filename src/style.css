@@ -18,9 +18,36 @@
 
   --bg-0: #181818;
   --bg-1: #1d1d1d;
-  --bg-2: #333;
-  --bg-3: #585858;
+  --bg-2: #333333;
+  --bg-3: #444444;
 
+}
+
+button{
+  padding: 0.65rem 1rem;
+  border: none;
+  border-radius: 0.65rem;
+  background: var(--bg-2);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1.1em;
+  color: #989898;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+button:hover{
+  color:  #eee;
+  background: var(--bg-3);
+
+}
+select{
+  padding: 0.5em 0.75rem;
+  font-size: 1em;
+  border: none;
+  border-radius: 0.65rem;
+  font-family: inherit;
+  letter-spacing: 2px;
 }
 
 
@@ -35,9 +62,15 @@ body {
   width: 100vw;
 }
 
+p{
+  font-size: 1.2em;
+  font-weight: 400;
+}
+
 h1 {
   font-size: 2.5em;
   letter-spacing: 0.02em;
+  margin: 0.5rem 0;
 }
 
 #app{
