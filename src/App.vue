@@ -29,7 +29,7 @@ import {latestRelease, SiteVersions} from "./tools.ts";
 import {ref, watch} from "vue";
 
 const autoRedirectActive = ref(true)
-const counter = ref(2)
+const counter = ref(3)
 const selected_version = ref("none")
 
 const id = setInterval(() => {
@@ -38,14 +38,15 @@ const id = setInterval(() => {
     clearInterval(id)
     setTimeout(() => {
       if (autoRedirectActive.value) {
+        console.log("Should be redirecting to",latestRelease.value)
         selected_version.value=latestRelease.value
       }
     }, 1200)
   }
 }, 1000)
 watch(selected_version, (value)=>{
-  if (SiteVersions.value.find(x=>x.name===value))
-    window.location.assign(`https://ultraflame4.github.io/${value}`)
+  if (SiteVersions.value.find(x=>x.name.trim()===value.trim()))
+    window.location.assign(`https://ultraflame4.github.io/${value.trim()}`)
 })
 
 document.addEventListener('keypress', ev => {
