@@ -16,8 +16,9 @@
             Select a version to continue
         </p>
         <select v-model="selected_version">
-            <option v-for="version in SiteVersions.toReversed()" :value="version.name">
-                {{ version.name }}
+            <option selected disabled>Select Version</option>
+            <option v-for="(version,index) in SiteVersions.toReversed()" :value="version.name">
+                {{ version.name }}{{index==0?" - latest":""}}
             </option>
         </select>
     </template>
@@ -30,7 +31,7 @@ import {ref, watch} from "vue";
 
 const autoRedirectActive = ref(true)
 const counter = ref(3)
-const selected_version = ref("none")
+const selected_version = ref("Select Version")
 
 const id = setInterval(() => {
     counter.value--;
