@@ -67,7 +67,7 @@ function auto_redirect() {
 
 watch(selected_version, (value) => {
     if (SiteVersions.value.find(x => x.name.trim() === value.trim())) {
-        // window.location.assign(`https://ultraflame4.github.io/${value.trim()}`)
+        window.location.assign(`https://ultraflame4.github.io/${value.trim()}`)
     }
 })
 
