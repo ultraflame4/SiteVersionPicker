@@ -12,6 +12,10 @@
             <button @click="autoRedirectActive=false">
                 Select Version
             </button>
+
+            <a @click="redirect_now()">
+                Skip
+            </a>
         </template>
         <template v-else>
             Auto-Redirect canceled
@@ -24,6 +28,9 @@
                     {{ version.name }}{{ index == 0 ? " - latest" : "" }}
                 </option>
             </select>
+            <a @click="redirect_now()">
+                Go latest
+            </a>
         </template>
     </div>
 
@@ -45,18 +52,22 @@ const id = setInterval(() => {
     }
 }, 1000)
 
+function redirect_now() {
+    console.log("Should be redirecting to", latestRelease.value)
+    selected_version.value = latestRelease.value
+}
+
 function auto_redirect() {
     setTimeout(() => {
         if (autoRedirectActive.value) {
-            console.log("Should be redirecting to", latestRelease.value)
-            selected_version.value = latestRelease.value
+            redirect_now();
         }
     }, 1200)
 }
 
 watch(selected_version, (value) => {
     if (SiteVersions.value.find(x => x.name.trim() === value.trim())) {
-        window.location.assign(`https://ultraflame4.github.io/${value.trim()}`)
+        // window.location.assign(`https://ultraflame4.github.io/${value.trim()}`)
     }
 })
 
