@@ -81,7 +81,7 @@ const avail_versions = computed(() => {
         }
         return {
             id: x.name,
-            url: x.html_url,
+            url: `https://ultraflame4.github.io/${x.name}`,
             name: `${x.name} ${suffix}`
         }
 
