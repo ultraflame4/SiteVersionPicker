@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
-import './style.css'
+import './assets/index.css'
 import App from './App.vue'
-import {_GetLatestVersion, _GetVersions} from "./tools.ts";
+import {_GetLatestVersion, _GetVersions} from "./tools";
 
 
 _GetVersions()

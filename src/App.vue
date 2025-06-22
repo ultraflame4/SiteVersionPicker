@@ -2,47 +2,91 @@
     <div id="pulse">
         <div class="gradient"></div>
     </div>
-    <div id="content">
-        <h1>Site Version Picker</h1>
+    <div id="content" class="gap-4">
+        <h1 class="text-4xl font-semibold">Site Version Picker</h1>
         <template v-if="autoRedirectActive">
             <p>
-                Auto-Redirect to latest <span class="version_text">{{ latestRelease.trim() }}</span>
+                Auto-Redirect to latest <span class="version_text">{{ latestRelease }}</span>
                 in {{ counter }}s
             </p>
-            <button @click="autoRedirectActive=false">
+            <p class="text-red-600" v-if="!redirecting">
+                Press <span class="font-mono font-bold">Shift + C</span> or <span class="font-mono font-bold">Q</span>
+                to cancel.
+            </p>
+            <p class="text-yellow-300" v-else>
+                Going to {{ goto_url }}
+            </p>
+            <Button class="cursor-pointer" @click="autoRedirectActive = false">
                 Select Version
-            </button>
+            </Button>
 
-            <a @click="redirect_now()">
+            <Button @click="redirect_now()" class="cursor-pointer" variant="link">
                 Skip
-            </a>
+            </Button>
         </template>
         <template v-else>
-            Auto-Redirect canceled
-            <p>
-                Select a version to continue
-            </p>
-            <select v-model="selected_version">
-                <option selected disabled>Select Version</option>
-                <option v-for="(version,index) in SiteVersions.toReversed()" :value="version.name">
-                    {{ version.name }}{{ index == 0 ? " - latest" : "" }}
-                </option>
-            </select>
-            <a @click="redirect_now()">
+            <p class="text-gray-400">Auto-Redirect canceled</p>
+            <Select v-model:model-value="goto_url">
+                <SelectTrigger>
+                    <SelectValue placeholder="Select Version" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        <SelectItem v-for="version in avail_versions" :value="version.url">
+                            {{ version.name }}
+                        </SelectItem>
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
+
+            <Button @click="redirect_now()" class="rounded-lg cursor-pointer text-green-400" variant="link">
                 Go latest
-            </a>
+            </Button>
+
         </template>
     </div>
 
 
 </template>
 <script setup lang="ts">
-import {latestRelease, SiteVersions} from "./tools.ts";
-import {ref, watch} from "vue";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+import { Button } from "@/components/ui/button"
+import { latestRelease, SiteVersions } from "./tools.ts";
+import { ref, watch, computed } from "vue";
 
 const autoRedirectActive = ref(true)
-const counter = ref(3)
-const selected_version = ref("Select Version")
+const redirecting = ref(false)
+const counter = ref(2)
+const goto_url = ref<string>()
+
+
+const avail_versions = computed(() => {
+    const latestIndex = SiteVersions.value.findIndex(x => x.name == latestRelease.value);
+
+    return SiteVersions.value.map((x, index) => {
+        let suffix = ""
+        if (index == latestIndex) {
+            suffix = "- latest"
+        }
+        if (index < latestIndex) {
+            suffix = "- preview"
+        }
+        return {
+            id: x.name,
+            url: x.html_url,
+            name: `${x.name} ${suffix}`
+        }
+
+    })
+})
 
 const id = setInterval(() => {
     counter.value--;
@@ -53,26 +97,26 @@ const id = setInterval(() => {
 }, 1000)
 
 function redirect_now() {
+    goto_url.value = avail_versions.value.find(x => x.id == latestRelease.value)?.url
     console.log("Should be redirecting to", latestRelease.value)
-    selected_version.value = latestRelease.value
 }
 
 function auto_redirect() {
     setTimeout(() => {
         if (autoRedirectActive.value) {
+            redirecting.value = true;
             redirect_now();
         }
-    }, 1200)
+    }, 100)
 }
 
-watch(selected_version, (value) => {
-    if (SiteVersions.value.find(x => x.name.trim() === value.trim())) {
-        window.location.assign(`https://ultraflame4.github.io/${value.trim()}`)
-    }
+watch(goto_url, (goto_url) => {
+    if (!goto_url) return;
+    window.location.assign(goto_url)
 })
 
 document.addEventListener('keypress', ev => {
-    if (ev.shiftKey && ev.key.toLowerCase() == "c") {
+    if (ev.key.toLowerCase() == "c" || ev.key.toLowerCase() == "q") {
         autoRedirectActive.value = false
         clearInterval(id)
     }
@@ -80,8 +124,8 @@ document.addEventListener('keypress', ev => {
 </script>
 
 <style scoped lang="scss">
-
-#content, #pulse {
+#content,
+#pulse {
     position: absolute;
     height: 100vh;
     width: 100vw;
@@ -105,20 +149,23 @@ document.addEventListener('keypress', ev => {
     background-position: -20px -19px;
 
 }
+
 @keyframes rotate {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
 }
 
 @keyframes pulsing {
-    0%{
+    0% {
         opacity: 0.25;
     }
-    100%{
+
+    100% {
         opacity: 0.75;
     }
 }
@@ -150,6 +197,4 @@ document.addEventListener('keypress', ev => {
 p {
     letter-spacing: 0.1px;
 }
-
-
 </style>

@@ -1,4 +1,4 @@
-import {ref, Ref} from "vue";
+import {computed, ref, type Ref} from "vue";
 
 export interface SimplifiedItem {
     name: string,
@@ -7,7 +7,8 @@ export interface SimplifiedItem {
 }
 
 export const SiteVersions: Ref<SimplifiedItem[]> = ref([])
-export const latestRelease: Ref<string> = ref("v1")
+const _latestRelease: Ref<string> = ref("v1")
+export const latestRelease = computed(()=>_latestRelease.value.toLowerCase().trim())
 
 interface cachedData<T> {
     data: T,
@@ -55,6 +56,7 @@ export async function _GetVersions() {
             SiteVersions.value.push(value)
         }
     })
+    SiteVersions.value.sort((a,b) => b.name.localeCompare(a.name))
 
     storeCache("versions", SiteVersions.value, 1000)
 }
@@ -62,6 +64,6 @@ export async function _GetVersions() {
 export async function _GetLatestVersion() {
     console.log("Fetching versions...")
     const data = await fetch("https://raw.githubusercontent.com/ultraflame4/ultraflame4.github.io/builds/LATEST_RELEASE")
-    latestRelease.value = await data.text()
+    _latestRelease.value = await data.text()
 
 }
